@@ -27,12 +27,14 @@
   copy:
     src: "{{ingress_nginx_manifest}}"
     dest: "/tmp/ingress_nginx.yaml"
+  changed_when: false
   when: ingress_nginx_manifest is not match("https://.*")
 
 - name: "Copy ingress_nginx deployment manifest from remote url"
   get_url:
     url: "{{ingress_nginx_manifest}}"
     dest: "/tmp/ingress_nginx.yaml"
+  changed_when: false
   when: ingress_nginx_manifest is match("https://.*")
 
 - name: "Add command line arguments"
@@ -41,6 +43,7 @@
     regexp: "^.*{{item}}.*"
     line: "            - {{item}}"
     insertafter: '^.*- /nginx-ingress-controller'
+  changed_when: false
   with_items: "{{ingress_nginx_command_line_arguments}}"
               
 - name: Install ingress_nginx
@@ -69,8 +72,14 @@
       src: dashboard.yaml.j2
       dest: "/tmp/dashboard.yaml"
   
-  - name: Apply the dashboard manifest
+  # We must retry, waiting for the webhook to be ready
+  - name: Apply the dashboard manifest (May wait for the nginx Webhook ready)
     k8s:
       state: present
       src:  "/tmp/dashboard.yaml"
+    retries: 20
+    delay: 5
+    register: result
+    until: not result.failed      
+  #- debug: var=result
   when: ingress_nginx_dashboard_host is defined     
