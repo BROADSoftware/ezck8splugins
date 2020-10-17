@@ -22,24 +22,41 @@
     name: python2-openshift 
     state: present
 
+- name: Ensure working temp folder
+  file:
+    state: directory
+    path: "{{ingress_nginx_tmp_folder}}"
+    state: directory
+
+- block:
+  - name: Generate the psp manifest
+    template:
+      src: psp.yaml.j2
+      dest: "{{ingress_nginx_tmp_folder}}/psp.yaml"
+    
+  - name: Apply the psp manifest
+    k8s:
+      state: present
+      src:  "{{ingress_nginx_tmp_folder}}/psp.yaml"
+  when: ingress_nginx_set_psp    
 
 - name: "Copy ingress_nginx deployment manifest from local files"
   copy:
     src: "{{ingress_nginx_manifest}}"
-    dest: "/tmp/ingress_nginx.yaml"
+    dest: "{{ingress_nginx_tmp_folder}}/ingress_nginx.yaml"
   changed_when: false
   when: ingress_nginx_manifest is not match("https://.*")
 
 - name: "Copy ingress_nginx deployment manifest from remote url"
   get_url:
     url: "{{ingress_nginx_manifest}}"
-    dest: "/tmp/ingress_nginx.yaml"
+    dest: "{{ingress_nginx_tmp_folder}}/ingress_nginx.yaml"
   changed_when: false
   when: ingress_nginx_manifest is match("https://.*")
 
 - name: "Add command line arguments"
   lineinfile:
-    path: "/tmp/ingress_nginx.yaml"
+    path: "{{ingress_nginx_tmp_folder}}/ingress_nginx.yaml"
     regexp: "^.*{{item}}.*"
     line: "            - {{item}}"
     insertafter: '^.*- /nginx-ingress-controller'
@@ -49,34 +66,31 @@
 - name: Install ingress_nginx
   k8s:
     state: present
-    src: "/tmp/ingress_nginx.yaml"
+    src: "{{ingress_nginx_tmp_folder}}/ingress_nginx.yaml"
 
 
 - name: Generate the LoadBalancer manifest
   template:
     src: load_balancer.yaml.j2
-    dest: "/tmp/load_balancer.yaml"
+    dest: "{{ingress_nginx_tmp_folder}}/load_balancer.yaml"
   
 - name: Apply the LoadBalancer manifest
   k8s:
     state: present
-    src:  "/tmp/load_balancer.yaml"
-
-
-
+    src:  "{{ingress_nginx_tmp_folder}}/load_balancer.yaml"
 
 - block:    
   # ------------------------------------- Dashboard manifest
   - name: Generate the dashboard manifest
     template:
       src: dashboard.yaml.j2
-      dest: "/tmp/dashboard.yaml"
+      dest: "{{ingress_nginx_tmp_folder}}/dashboard.yaml"
   
   # We must retry, waiting for the webhook to be ready
   - name: Apply the dashboard manifest (May wait for the nginx Webhook ready)
     k8s:
       state: present
-      src:  "/tmp/dashboard.yaml"
+      src:  "{{ingress_nginx_tmp_folder}}/dashboard.yaml"
     retries: 20
     delay: 5
     register: result
