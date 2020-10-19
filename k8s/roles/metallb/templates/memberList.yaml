@@ -5,7 +5,7 @@ metadata:
   name: memberlist
   namespace: metallb-system
 data:
-  secretkey: {{ secret_data.stdout }}
+  secretkey: {{ secret_data.stdout|b64encode }}
   
   
   
