@@ -25,7 +25,12 @@ Launch with Finder and open ‘Preference systeme/Securité et confidentialité�
 Then:
 
 ```
+# By lb direct access
 export LOKI_ADDR=http://loki.kspray1:3100
+
+# By ingress
+export LOKI_ADDR=http://loki.ingress.kspray2.ctb01
+
 logcli labels namespace
 ```
 

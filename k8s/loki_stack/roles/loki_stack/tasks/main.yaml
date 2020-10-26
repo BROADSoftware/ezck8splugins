@@ -58,47 +58,56 @@
     
 #- debug: var=helm_result
 
-
-- name: Create metallb entry for grafana
+- name: Setup ingress template
+  template:
+    src: ingress.yaml.j2
+    dest: "{{loki_stack_working_folder}}/ingress.yml"
+    
+- name: Apply ingress template
   k8s:
-    state: present
-    definition: 
-      apiVersion: v1
-      kind: Service
-      metadata:  
-        namespace: "{{ loki_stack_config.namespace }}"
-        name: grafana-lb
-      spec:
-        selector:    
-          app: grafana
-          release: loki
-        type: LoadBalancer
-        loadBalancerIP: "{{ loki_stack_config.grafana.lb_address }}"
-        ports:
-        - port: 80
-          targetPort: 3000
-  when: loki_stack_config.grafana.lb_address is defined
-  
+    src: "{{loki_stack_working_folder}}/ingress.yml"
 
-- name: Create metallb entry for loki
-  k8s:
-    state: present
-    definition: 
-      apiVersion: v1
-      kind: Service
-      metadata:  
-        namespace: "{{ loki_stack_config.namespace }}"
-        name: loki-lb
-      spec:
-        selector:    
-          app: loki
-          release: loki
-        type: LoadBalancer
-        loadBalancerIP: "{{ loki_stack_config.loki.lb_address }}"
-        ports:
-        - port: 3100
-          targetPort: 3100
-  when: loki_stack_config.loki.lb_address is defined
+#
+#- name: Create metallb entry for grafana
+#  k8s:
+#    state: present
+#    definition: 
+#      apiVersion: v1
+#      kind: Service
+#      metadata:  
+#        namespace: "{{ loki_stack_config.namespace }}"
+#        name: grafana-lb
+#      spec:
+#        selector:    
+#          app: grafana
+#          release: loki
+#        type: LoadBalancer
+#        loadBalancerIP: "{{ loki_stack_config.grafana.lb_address }}"
+#        ports:
+#        - port: 80
+#          targetPort: 3000
+#  when: loki_stack_config.grafana.lb_address is defined
+#  
+#
+#- name: Create metallb entry for loki
+#  k8s:
+#    state: present
+#    definition: 
+#      apiVersion: v1
+#      kind: Service
+#      metadata:  
+#        namespace: "{{ loki_stack_config.namespace }}"
+#        name: loki-lb
+#      spec:
+#        selector:    
+#          app: loki
+#          release: loki
+#        type: LoadBalancer
+#        loadBalancerIP: "{{ loki_stack_config.loki.lb_address }}"
+#        ports:
+#        - port: 3100
+#          targetPort: 3100
+#  when: loki_stack_config.loki.lb_address is defined
   
   
 

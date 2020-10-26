@@ -1,0 +1,82 @@
+
+{% if loki_stack_config.grafana.lb_address is defined %}
+---
+apiVersion: v1
+kind: Service
+metadata:  
+  namespace: "{{ loki_stack_config.namespace }}"
+  name: grafana-lb
+spec:
+  selector:    
+    app: grafana
+    release: loki
+  type: LoadBalancer
+  loadBalancerIP: "{{ loki_stack_config.grafana.lb_address }}"
+  ports:
+  - port: 80
+    targetPort: 3000
+{% endif %}  
+
+{% if loki_stack_config.loki.lb_address is defined %}
+---
+apiVersion: v1
+kind: Service
+metadata:  
+  namespace: "{{ loki_stack_config.namespace }}"
+  name: loki-lb
+spec:
+  selector:    
+    app: loki
+    release: loki
+  type: LoadBalancer
+  loadBalancerIP: "{{ loki_stack_config.loki.lb_address }}"
+  ports:
+  - port: 3100
+    targetPort: 3100
+{% endif %}
+  
+
+{% if loki_stack_config.grafana.ingress_host is defined %}
+---    
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: grafana
+  namespace: loki
+  annotations:
+    # use the shared ingress-nginx
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+spec:
+  rules:
+  - host: {{ loki_stack_config.grafana.ingress_host }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: loki-grafana
+          servicePort: 80
+{% endif %}
+
+{% if loki_stack_config.loki.ingress_host is defined %}
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: loki
+  namespace: loki
+  annotations:
+    # use the shared ingress-nginx
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+spec:
+  rules:
+  - host: {{ loki_stack_config.loki.ingress_host }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: loki
+          servicePort: 3100
+{% endif %}
+          

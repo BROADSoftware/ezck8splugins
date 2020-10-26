@@ -35,6 +35,7 @@ mapping:
             mapping:
               "disabled": { type: bool, required: False }
               "lb_address": { type: str, required: False }
+              "ingress_host": { type: str, required: False }
               "persistence": 
                 type: map
                 required: false  # Required if enabled
@@ -48,6 +49,7 @@ mapping:
             mapping:
               "disabled": { type: bool, required: False }
               "lb_address": { type: str, required: False }
+              "ingress_host": { type: str, required: False }
               "persistence": 
                 type: map
                 required: false  # Required if enabled
