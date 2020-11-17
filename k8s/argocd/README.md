@@ -9,3 +9,11 @@ kubectl get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut
 argocd login argocd.kspray1
 argocd account update-password
 ```
+## Add repo:
+
+```
+argocd repo add https://github.com/mycompany/myrepo.git --username "user@mycompany.com" --password xxxx
+```
+
+
+

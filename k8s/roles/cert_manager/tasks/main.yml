@@ -30,4 +30,46 @@
     state: present
     src: "/tmp/cert_manager.yaml"
   
-        
+- name: Wait for cert-manager running
+  k8s_info:
+    kind: Pod
+    api_version: v1
+    namespace: cert-manager
+    label_selectors:
+    - app=cert-manager
+    field_selectors:
+    - status.phase=Running
+  register: k8s_result
+  retries: 30
+  delay: 3
+  until: k8s_result.resources is defined and k8s_result.resources|length > 0
+  
+- name: Wait for cert-manager-cainjector running
+  k8s_info:
+    kind: Pod
+    api_version: v1
+    namespace: cert-manager
+    label_selectors:
+    - app=cainjector
+    field_selectors:
+    - status.phase=Running
+  register: k8s_result
+  retries: 30
+  delay: 3
+  until: k8s_result.resources is defined and k8s_result.resources|length > 0
+  
+- name: Wait for cert-manager-webhook running
+  k8s_info:
+    kind: Pod
+    api_version: v1
+    namespace: cert-manager
+    label_selectors:
+    - app=webhook
+    field_selectors:
+    - status.phase=Running
+  register: k8s_result
+  retries: 30
+  delay: 3
+  until: k8s_result.resources is defined and k8s_result.resources|length > 0
+
+    

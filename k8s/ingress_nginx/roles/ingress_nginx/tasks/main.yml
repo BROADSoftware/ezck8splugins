@@ -91,7 +91,7 @@
     k8s:
       state: present
       src:  "{{ingress_nginx_tmp_folder}}/dashboard.yaml"
-    retries: 20
+    retries: 100   # NB: May take long time to load controller image
     delay: 5
     register: result
     until: not result.failed      
