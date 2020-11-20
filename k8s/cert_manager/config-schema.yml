@@ -16,24 +16,15 @@
 # along with EzCluster.  If not, see <http://www.gnu.org/licenses/lgpl-3.0.html>.
 
 
+
 type: map
 mapping:
-  "k8s":
-    type: map
-    required: True
-    mapping:
-      "cert_manager":
-        type: map
-        required: true
-        mapping:
-          "disabled": { type: bool, required: False }
-          "version": { type: str, required: True } 
-          "cluster_issuers":
-            type: seq
-            required: false
-            sequence:
-            - type: map
-              mapping:
-                "name": { type: str, required: True } 
-                "id": { type: str, required: True } 
-            
+  "cert_manager_issuers":
+    type: seq
+    required: false
+    sequence:
+    - type: map
+      mapping:
+        "id": { type: str, required: True }
+        "ca_crt": { type: str, required: True }    # cat ca.crt | base64 
+        "ca_key": { type: str, required: True }    # cat ca.key | base64

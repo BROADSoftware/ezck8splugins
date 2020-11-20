@@ -30,6 +30,16 @@
     state: present
     src: "/tmp/cert_manager.yaml"
   
+- name: Copy cluster_issuers
+  template:
+    src: cluster_issuers.yaml.j2
+    dest: /tmp/cluster_issuers.yaml  
+
+- name: Install cluster_issuers
+  k8s:
+    state: present
+    src: "/tmp/cluster_issuers.yaml"  
+  
 - name: Wait for cert-manager running
   k8s_info:
     kind: Pod
