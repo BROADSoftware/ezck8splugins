@@ -13,4 +13,7 @@
 {%% if m.cluster.k8s.argocd.manifest is defined %%}
     argocd_manifest: {{{ m.cluster.k8s.argocd.manifest }}}
 {%% endif %%}
+{%% if m.cluster.k8s.argocd.cluster_issuer is defined %%}
+    argocd_cluster_issuer: {{{ m.cluster.k8s.argocd.cluster_issuer }}}
+{%% endif %%}
      

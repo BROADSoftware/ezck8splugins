@@ -29,7 +29,8 @@ mapping:
           "disabled": { type: bool, required: False }
           "version": { type: str, required: True } 
           "load_balancer_ip": { type: str, required: False }      # Create a service.type: LoadBalancer
-          "ingress_nginx_host": { type: str, required: False }   # Create an ingress for ingress-nginx-controller
-          "manifest": { type: str, required: False }
+          "ingress_nginx_host": { type: str, required: False }    # Create an ingress for ingress-nginx-controller
+          "manifest": { type: str, required: False }              # Will override the role/default
+          "cluster_issuer": { type: str, required: False }        # Cert-manager cluster-issuer to certify our TLS connection
               
                 
