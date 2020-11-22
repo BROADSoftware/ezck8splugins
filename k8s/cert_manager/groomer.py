@@ -32,10 +32,11 @@ CLUSTER_ISSUERS = "cluster_issuers"
 
 def groomIssuers(model):
     model[DATA][CERT_MANAGER_ISSUER_BY_ID] = {}
-    for issuer in model[CONFIG][CERT_MANAGER_ISSUERS]:
-        if issuer[ID] in model[DATA][CERT_MANAGER_ISSUER_BY_ID]:
-            ERROR("Cert_manager_issuer of id '{}' is defined twice in configuration file!".format(issuer[ID]))
-        model[DATA][CERT_MANAGER_ISSUER_BY_ID][issuer[ID]] = issuer
+    if CERT_MANAGER_ISSUERS in model[CONFIG]:
+        for issuer in model[CONFIG][CERT_MANAGER_ISSUERS]:
+            if issuer[ID] in model[DATA][CERT_MANAGER_ISSUER_BY_ID]:
+                ERROR("Cert_manager_issuer of id '{}' is defined twice in configuration file!".format(issuer[ID]))
+            model[DATA][CERT_MANAGER_ISSUER_BY_ID][issuer[ID]] = issuer
     
     
 def groom(_plugin, model):
