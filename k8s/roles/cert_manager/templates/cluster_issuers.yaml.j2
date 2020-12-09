@@ -17,4 +17,16 @@ metadata:
 spec:
   ca:
     secretName: {{ issuer.name }}  
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ issuer.name }}-ca
+  namespace: cert-manager
+  annotations:
+    kubed.appscode.com/sync: ca/{{issuer.name}}=copy
+    replicator.v1.mittwald.de/replication-allowed: "true"
+    replicator.v1.mittwald.de/replication-allowed-namespaces: ".*"
+data:
+  ca.crt: {{ issuer.ca_crt }} 
 {% endfor %}
