@@ -1,3 +1,4 @@
+---
 # Copyright (C) 2020 BROADSoftware
 #
 # This file is part of EzCluster
@@ -16,21 +17,15 @@
 # along with EzCluster.  If not, see <http://www.gnu.org/licenses/lgpl-3.0.html>.
 
 
+    
+- name: reload service file
+  command: "systemctl daemon-reload"
+  listen: reload_service_file
+  
 
-type: map
-mapping:
-  "repositories":
-    type: map
-    required: false
-    mapping:
-      "topolvm": 
-        type: seq
-        required: false
-        sequence:
-        - type: map
-          mapping:
-            "repo_id": { type: str, required: True }
-            "version": { type: str, required: True }
-            "lvmd_tgz_url": { type: str, required: True }
-            "vgsd_url": { type: str, required: True }
-            
+- name: restart vgsd
+  service: 
+    name: vgsd
+    state: restarted
+  listen: restart_vgsd
+    

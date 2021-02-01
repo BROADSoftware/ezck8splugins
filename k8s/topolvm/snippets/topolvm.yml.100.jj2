@@ -7,6 +7,9 @@
     topolvm_lvmd_tgz_url: {{{m.data.repositories.topolvm.lvmd_tgz_url }}}
   roles:
   - topolvm_lvmd
+{%% if m.cluster.k8s.topolvm.vgsd %%}
+  - vgsd
+{%% endif %%}  
 
 
 - hosts: kube-master

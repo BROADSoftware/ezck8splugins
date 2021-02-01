@@ -13,4 +13,7 @@
   tags: [ "topolvm", "topolvm_lvmd" ]
   roles:
   - topolvm_lvmd_absent
+{%% if m.cluster.k8s.topolvm.vgsd %%}
+  - vgsd_absent
+{%% endif %%}  
   

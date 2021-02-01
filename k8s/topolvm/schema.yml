@@ -28,6 +28,7 @@ mapping:
         mapping:
           "disabled": { type: bool, required: False }
           "repo_id": { type: str, required: true }
+          "vgsd": { type: bool, required: False }
           "device_classes": 
             type: seq
             required: true

@@ -16,21 +16,24 @@
 # along with EzCluster.  If not, see <http://www.gnu.org/licenses/lgpl-3.0.html>.
 
 
-
-type: map
-mapping:
-  "repositories":
-    type: map
-    required: false
-    mapping:
-      "topolvm": 
-        type: seq
-        required: false
-        sequence:
-        - type: map
-          mapping:
-            "repo_id": { type: str, required: True }
-            "version": { type: str, required: True }
-            "lvmd_tgz_url": { type: str, required: True }
-            "vgsd_url": { type: str, required: True }
+- name: Populate service facts
+  service_facts:
+   
+- name: Stop vgsd services
+  service:
+    name: vgsd
+    enabled: no
+    state: stopped        
+  when: "'vgsd.service' in ansible_facts.services"
             
+- name: Remove the vgsd binary
+  file:
+    path:  /opt/sbin/vgsd
+    state: absent
+
+- name: Remove vgsd service
+  file:
+    path: /usr/lib/systemd/system/vgsd.service
+    state: absent
+  notify: reload_service_file
+    
