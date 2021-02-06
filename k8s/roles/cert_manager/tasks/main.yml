@@ -30,16 +30,6 @@
     state: present
     src: "/tmp/cert_manager.yaml"
   
-- name: Copy cluster_issuers
-  template:
-    src: cluster_issuers.yaml.j2
-    dest: /tmp/cluster_issuers.yaml  
-
-- name: Install cluster_issuers
-  k8s:
-    state: present
-    src: "/tmp/cluster_issuers.yaml"  
-  
 - name: Wait for cert-manager running
   k8s_info:
     kind: Pod
@@ -82,4 +72,17 @@
   delay: 3
   until: k8s_result.resources is defined and k8s_result.resources|length > 0
 
+- name: Pause 30sec for the webhook to be ready
+  pause:
+    seconds: 30  
+  
+- name: Copy cluster_issuers
+  template:
+    src: cluster_issuers.yaml.j2
+    dest: /tmp/cluster_issuers.yaml  
+
+- name: Install cluster_issuers
+  k8s:
+    state: present
+    src: "/tmp/cluster_issuers.yaml"  
     
