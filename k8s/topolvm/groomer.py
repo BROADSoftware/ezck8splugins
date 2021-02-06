@@ -81,14 +81,13 @@ def groom(_plugin, model):
     if model[CLUSTER][K8S][TOPOLVM][DISABLED]:
         return False
     else:
-        setDefaultInMap(model[CLUSTER][K8S][TOPOLVM], VGSD, True)
+        setDefaultInMap(model[CLUSTER][K8S][TOPOLVM], VGSD, False)
         deviceClassByName = {}
         for deviceClass in model[CLUSTER][K8S][TOPOLVM][DEVICE_CLASSES]:
             setDefaultInMap(deviceClass, SPARE_GB, 10)
             setDefaultInMap (deviceClass, STORAGE_CLASS, "topolvm-{}".format(deviceClass[NAME]))
             setDefaultInMap (deviceClass, VOLUME_GROUP, "topolvm-{}".format(deviceClass[NAME]))
             setDefaultInMap(deviceClass, FSTYPE, "xfs")
-            setDefaultInMap(deviceClass, ALLOW_VOLUME_EXPANSION, False)
             deviceClassByName[deviceClass[NAME]] = deviceClass
         
         lookupRepository(model, None, "topolvm", model[CLUSTER][K8S][TOPOLVM][REPO_ID])

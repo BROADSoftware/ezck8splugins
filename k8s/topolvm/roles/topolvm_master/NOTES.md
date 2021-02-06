@@ -1,3 +1,16 @@
+# Kubernetes version
+
+For kubernetes >= 1.19, v0.7.0 or later must be used.
+
+For kubernetes < 1.19, v0.5.2, v0.5.3 or v0.7.0x must be used.
+
+Difference between v0.7.0 and v0.7.0x is the way the scheduler extension is implemented.
+
+WARNING: Currently, v0.7.0x has not being tested
+
+
+# New topolvm version update
+
 
 ## manifest.yaml.j2 build
 
@@ -9,6 +22,25 @@ In deploy/manifests/base, edit kustomization.yaml
 - Add at the end: 
     patchesStrategicMerge:
    - patch.yaml
+
+```
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - crd.yaml
+  - controller.yaml
+  - mutatingwebhooks.yaml
+  - namespace.yaml
+  - node.yaml
+#  - provisioner.yaml
+  - psp.yaml
+  - scheduler.yaml
+  - certificates.yaml
+patchesStrategicMerge:
+  - patch.yaml 
+```
+
+Old (v0.5.x):
       
 ```
 apiVersion: kustomize.config.k8s.io/v1beta1
@@ -32,7 +64,7 @@ patchesStrategicMerge:
   - patch.yaml 
 ```
 
-And add patch.yaml with the following
+And add patch.yaml with the following (This is related to the fact the role set this value to topolvm nodes).
     
 ```
 apiVersion: apps/v1
@@ -50,7 +82,7 @@ spec:
 Then in the root folder of topolvm:
 
 ```
-mkdir /tmp
+mkdir ./tmp
 kustomize build ./deploy/manifests/overlays/daemonset-scheduler >./tmp/manifest.yaml.j2
 ```
 

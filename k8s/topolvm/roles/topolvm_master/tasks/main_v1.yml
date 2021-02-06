@@ -15,6 +15,9 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with EzCluster.  If not, see <http://www.gnu.org/licenses/lgpl-3.0.html>.
 
+
+# This main-v1 is for topolvm v0.5.2 or v0.5.3
+
 - name: Install k8s ansible module required package
   yum: name=python2-openshift state=present
 
@@ -127,7 +130,7 @@
   - { line: '    - { mountPath: /var/lib/scheduler/scheduler-policy.cfg, name: scheduler-policy, readOnly: true }', regexp: '^.*mountPath: +/var/lib/scheduler/scheduler-policy\.cfg' }
   - { line: '    - { mountPath: /var/lib/scheduler/scheduler-config.yaml, name: scheduler-config, readOnly: true }', regexp: '^.*mountPath: +/var/lib/scheduler/scheduler-config\.yaml' }
 
-- name: Configure kube-scheduler (2/3)
+- name: Configure kube-scheduler (3/3)
   lineinfile:
     state: "{{topolvm_state}}"
     path: /etc/kubernetes/manifests/kube-scheduler.yaml
