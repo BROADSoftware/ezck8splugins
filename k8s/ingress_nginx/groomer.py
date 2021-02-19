@@ -34,7 +34,8 @@ def groom(_plugin, model):
     if model[CLUSTER][K8S][INGRESS_NGINX][DISABLED]:
         return False
     else:
-        model[CLUSTER][K8S][INGRESS_NGINX][EXTERNAL_IP] = resolveDnsAndCheck(model[CLUSTER][K8S][INGRESS_NGINX][EXTERNAL_IP])
+        if EXTERNAL_IP in model[CLUSTER][K8S][INGRESS_NGINX]:
+            model[CLUSTER][K8S][INGRESS_NGINX][EXTERNAL_IP] = resolveDnsAndCheck(model[CLUSTER][K8S][INGRESS_NGINX][EXTERNAL_IP])
         if DASHBOARD_HOST in model[CLUSTER][K8S][INGRESS_NGINX]:
             dashboard_ip = resolveDnsAndCheck(model[CLUSTER][K8S][INGRESS_NGINX][DASHBOARD_HOST])
             if model[CLUSTER][K8S][INGRESS_NGINX][EXTERNAL_IP] != dashboard_ip:

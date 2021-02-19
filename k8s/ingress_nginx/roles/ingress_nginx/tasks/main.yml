@@ -26,7 +26,6 @@
   file:
     state: directory
     path: "{{ingress_nginx_tmp_folder}}"
-    state: directory
 
 - block:
   - name: Generate the psp manifest
@@ -68,16 +67,17 @@
     state: present
     src: "{{ingress_nginx_tmp_folder}}/ingress_nginx.yaml"
 
-
 - name: Generate the LoadBalancer manifest
   template:
     src: load_balancer.yaml.j2
     dest: "{{ingress_nginx_tmp_folder}}/load_balancer.yaml"
+  when: ingress_nginx_external_ip is defined
   
 - name: Apply the LoadBalancer manifest
   k8s:
     state: present
     src:  "{{ingress_nginx_tmp_folder}}/load_balancer.yaml"
+  when: ingress_nginx_external_ip is defined
 
 - block:    
   # ------------------------------------- Dashboard manifest

@@ -28,7 +28,7 @@ mapping:
         mapping:
           "disabled": { type: bool, required: False }
           "version": { type: str, required: True } 
-          "external_ip": { type: str, required: True }
+          "external_ip": { type: str, required: False }
           "dashboard_host": { type: str, required: False }
           "manifest": { type: str, required: False }
           "command_line_arguments": 
