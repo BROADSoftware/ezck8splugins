@@ -5,10 +5,10 @@
 Get initial password and change it
 
 ```
-kubectl get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d'/' -f 2
-argocd login argocd.shared1
-argocd account update-password
+argocd login argocd.ingress.ksprayX.XXX --username admin --password $(kubectl get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d'/' -f 2)
+argocd account update-password --current-password $(kubectl get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d'/' -f 2) --new-password admin
 ```
+
 ## Add repo:
 
 ```
