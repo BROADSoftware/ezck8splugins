@@ -37,7 +37,7 @@ def groom(_plugin, model):
             model[CLUSTER][K8S][ARGOCD][LOAD_BALANCER_IP] = resolveDnsAndCheck(model[CLUSTER][K8S][ARGOCD][LOAD_BALANCER_IP])
         if INGRESS_NGINX_HOST in model[CLUSTER][K8S][ARGOCD]:
             argocd_ip = resolveDnsAndCheck(model[CLUSTER][K8S][ARGOCD][INGRESS_NGINX_HOST]) # error if it does not resolve.
-            if INGRESS_NGINX in model[CLUSTER][K8S]:
+            if INGRESS_NGINX in model[CLUSTER][K8S] and EXTERNAL_IP in model[CLUSTER][K8S][INGRESS_NGINX]:
                 ingress_ip = resolveDnsAndCheck(model[CLUSTER][K8S][INGRESS_NGINX][EXTERNAL_IP])
                 if argocd_ip != ingress_ip:
                     ERROR("k8s.argocd: 'ingress_nginx_host' and 'ingress_nginx.external_ip' must resolve on same ip ({} != {})".format(argocd_ip, ingress_ip))
