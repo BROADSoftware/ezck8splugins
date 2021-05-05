@@ -67,17 +67,31 @@
     state: present
     src: "{{ingress_nginx_tmp_folder}}/ingress_nginx.yaml"
 
-- name: Generate the LoadBalancer manifest
-  template:
-    src: load_balancer.yaml.j2
-    dest: "{{ingress_nginx_tmp_folder}}/load_balancer.yaml"
+- block:
+  # -------------------------------------- LoadBalancer as upfront
+  - name: Generate the LoadBalancer manifest
+    template:
+      src: load_balancer.yaml.j2
+      dest: "{{ingress_nginx_tmp_folder}}/load_balancer.yaml"
+    
+  - name: Apply the LoadBalancer manifest
+    k8s:
+      state: present
+      src:  "{{ingress_nginx_tmp_folder}}/load_balancer.yaml"
   when: ingress_nginx_external_ip is defined
-  
-- name: Apply the LoadBalancer manifest
-  k8s:
-    state: present
-    src:  "{{ingress_nginx_tmp_folder}}/load_balancer.yaml"
-  when: ingress_nginx_external_ip is defined
+
+- block:
+  # -------------------------------------- NodePort as upfront
+  - name: Generate the NodePort manifest
+    template:
+      src: node_port.yaml.j2
+      dest: "{{ingress_nginx_tmp_folder}}/node_port.yaml"
+    
+  - name: Apply the NodePort manifest
+    k8s:
+      state: present
+      src:  "{{ingress_nginx_tmp_folder}}/node_port.yaml"
+  when: (ingress_nginx_http_node_port is defined) or (ingress_nginx_https_node_port is defined)
 
 - block:    
   # ------------------------------------- Dashboard manifest
