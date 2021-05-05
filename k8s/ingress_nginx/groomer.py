@@ -38,7 +38,7 @@ def groom(_plugin, model):
             model[CLUSTER][K8S][INGRESS_NGINX][EXTERNAL_IP] = resolveDnsAndCheck(model[CLUSTER][K8S][INGRESS_NGINX][EXTERNAL_IP])
         if DASHBOARD_HOST in model[CLUSTER][K8S][INGRESS_NGINX]:
             dashboard_ip = resolveDnsAndCheck(model[CLUSTER][K8S][INGRESS_NGINX][DASHBOARD_HOST])
-            if model[CLUSTER][K8S][INGRESS_NGINX][EXTERNAL_IP] != dashboard_ip:
+            if EXTERNAL_IP in model[CLUSTER][K8S][INGRESS_NGINX] and  model[CLUSTER][K8S][INGRESS_NGINX][EXTERNAL_IP] != dashboard_ip:
                 ERROR("k8s.ingress_nginx: 'external_ip' and 'dashboard_host' must resolve on same ip ({} != {})".format(model[CLUSTER][K8S][INGRESS_NGINX][EXTERNAL_IP], dashboard_ip))
             enableSslPassthrough = False
             if COMMAND_LINE_ARGUMENTS in model[CLUSTER][K8S][INGRESS_NGINX]:
