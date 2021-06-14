@@ -16,7 +16,7 @@
 # along with EzCluster.  If not, see <http://www.gnu.org/licenses/lgpl-3.0.html>.
 
 import logging
-from misc import setDefaultInMap, ERROR, resolveDns
+from misc import setDefaultInMap, ERROR, resolveDns, resolveDnsAndCheck
 
 
 logger = logging.getLogger("ezcluster.groomer")
