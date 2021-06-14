@@ -43,7 +43,6 @@ DEVICE="device"
 NODE_BY_NAME="nodeByName"
 NODES="nodes"
 ALLOW_VOLUME_EXPANSION="allow_volume_expansion"
-VGSD="vgsd"
 
 """
 In model[DATA][K8S][TOPOLVM]:
@@ -81,7 +80,6 @@ def groom(_plugin, model):
     if model[CLUSTER][K8S][TOPOLVM][DISABLED]:
         return False
     else:
-        setDefaultInMap(model[CLUSTER][K8S][TOPOLVM], VGSD, False)
         deviceClassByName = {}
         for deviceClass in model[CLUSTER][K8S][TOPOLVM][DEVICE_CLASSES]:
             setDefaultInMap(deviceClass, SPARE_GB, 10)

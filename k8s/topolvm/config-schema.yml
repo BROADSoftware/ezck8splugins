@@ -32,5 +32,5 @@ mapping:
             "repo_id": { type: str, required: True }
             "version": { type: str, required: True }
             "lvmd_tgz_url": { type: str, required: True }
-            "vgsd_url": { type: str, required: True }
+            "vgsd_url": { type: str, required: False }  # Used by some older version.
             
