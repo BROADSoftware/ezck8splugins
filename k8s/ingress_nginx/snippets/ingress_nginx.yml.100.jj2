@@ -1,6 +1,6 @@
 
 
-- hosts: kube-master[0]:rancher[0]
+- hosts: kube_control_plane[0]:rancher[0]
   tags: [ "ingress", "nginx", "ingress_nginx", "ingressnginx", "ingress-nginx" ]
   roles:
   - role: "ingress_nginx"

@@ -3,7 +3,7 @@
 
 {%% for cluster in m.cluster.k8s.rook_ceph.clusters %%}
 
-- hosts: kube-master[0]
+- hosts: kube_control_plane[0]
   tasks:
   - name: delete '{{{ cluster.name }}}' namespace
     k8s:
@@ -25,7 +25,7 @@
 
 {%% endfor %%}
 
-- hosts: kube-master[0]
+- hosts: kube_control_plane[0]
   tasks:
   - name: delete 'rook-ceph' namespace
     k8s:
@@ -99,7 +99,7 @@
 {%% for cluster in m.cluster.k8s.rook_ceph.clusters %%}
 {%% if cluster.block_pools is defined and cluster.block_pools|length() > 0 %%}
 
-- hosts: kube-master[0]
+- hosts: kube_control_plane[0]
   tasks:
   - name: delete '{{{ cluster.name }}}' storage class(es)
     k8s:

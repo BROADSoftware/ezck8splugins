@@ -3,7 +3,7 @@
 {%% for dep in m.cluster.k8s.helm_deployments %%}
 {%% if not dep.disabled %%}
 
-- hosts: kube-master[0]
+- hosts: kube_control_plane[0]
   tags: [ "helm_{{{dep.name}}}", "helm-{{{dep.name}}}" ]
 
   tasks:

@@ -1,5 +1,5 @@
 
-- hosts: kube-master[0]:rancher[0]
+- hosts: kube_control_plane[0]:rancher[0]
   tags: [ "argocd", "argoc_cd", "argo-cd" ]
   roles:
   - role: "argocd"

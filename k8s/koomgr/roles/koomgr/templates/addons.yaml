@@ -39,12 +39,12 @@ spec:
   dnsNames:
   - koo-webhook-service.koo-system.svc
   - koo-webhook-service.koo-system.svc.cluster.local
-{% for node in groups["kube-master"] %}
+{% for node in groups["kube_control_plane"] %}
   - {{hostvars[node].ansible_nodename }}
 {% endfor %}  
 {% if koomgr_domains is defined %}
 {% for domain in koomgr_domains %}
-{% for node in groups["kube-master"] %}
+{% for node in groups["kube_control_plane"] %}
   - {{hostvars[node].ansible_nodename }}.{{domain}}
 {% endfor %}  
 {% endfor %}  

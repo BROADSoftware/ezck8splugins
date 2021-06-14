@@ -1,6 +1,6 @@
 
 
-- hosts: kube-master
+- hosts: kube_control_plane
   tags: [ "koo", "koomgr" ]
   vars:
     koomgr_state: absent

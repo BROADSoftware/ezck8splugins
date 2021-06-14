@@ -15,7 +15,11 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with EzCluster.  If not, see <http://www.gnu.org/licenses/lgpl-3.0.html>.
 
-from misc import setDefaultInMap, ERROR, resolveDnsAndCheck
+import logging
+from misc import setDefaultInMap, ERROR, resolveDns
+
+
+logger = logging.getLogger("ezcluster.groomer")
 
 CLUSTER = "cluster"
 K8S="k8s"
@@ -37,9 +41,12 @@ def groom(_plugin, model):
         if EXTERNAL_IP in model[CLUSTER][K8S][INGRESS_NGINX]:
             model[CLUSTER][K8S][INGRESS_NGINX][EXTERNAL_IP] = resolveDnsAndCheck(model[CLUSTER][K8S][INGRESS_NGINX][EXTERNAL_IP])
         if DASHBOARD_HOST in model[CLUSTER][K8S][INGRESS_NGINX]:
-            dashboard_ip = resolveDnsAndCheck(model[CLUSTER][K8S][INGRESS_NGINX][DASHBOARD_HOST])
-            if EXTERNAL_IP in model[CLUSTER][K8S][INGRESS_NGINX] and  model[CLUSTER][K8S][INGRESS_NGINX][EXTERNAL_IP] != dashboard_ip:
-                ERROR("k8s.ingress_nginx: 'external_ip' and 'dashboard_host' must resolve on same ip ({} != {})".format(model[CLUSTER][K8S][INGRESS_NGINX][EXTERNAL_IP], dashboard_ip))
+            dashboard_ip = resolveDns(model[CLUSTER][K8S][INGRESS_NGINX][DASHBOARD_HOST])
+            if dashboard_ip is not None:
+                if EXTERNAL_IP in model[CLUSTER][K8S][INGRESS_NGINX] and  model[CLUSTER][K8S][INGRESS_NGINX][EXTERNAL_IP] != dashboard_ip:
+                    ERROR("k8s.ingress_nginx: 'external_ip' and 'dashboard_host' must resolve on same ip ({} != {})".format(model[CLUSTER][K8S][INGRESS_NGINX][EXTERNAL_IP], dashboard_ip))
+            else:
+                logger.warn("Unable to resolve '{}' for now. May be this DNS entry will be created later.".format(model[CLUSTER][K8S][INGRESS_NGINX][DASHBOARD_HOST]))
             enableSslPassthrough = False
             if COMMAND_LINE_ARGUMENTS in model[CLUSTER][K8S][INGRESS_NGINX]:
                 for cla in model[CLUSTER][K8S][INGRESS_NGINX][COMMAND_LINE_ARGUMENTS]:

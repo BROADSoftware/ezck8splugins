@@ -1,6 +1,6 @@
 
 
-- hosts: kube-master[0]
+- hosts: kube_control_plane[0]
   tags: [ "loki"]
   vars:
     loki_helm_chart_tgz_url: "{{{ m.data.repositories.loki.helm_chart_tgz_url }}}"

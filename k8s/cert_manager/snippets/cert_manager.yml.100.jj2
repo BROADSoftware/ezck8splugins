@@ -1,6 +1,6 @@
 
 - name: Install cert-manager
-  hosts:  kube-master[0]
+  hosts:  kube_control_plane[0]
   tags: [ "cert_manager", "cert-manager" ]
   vars:
     cert_manager_version: {{{ m.cluster.k8s.cert_manager.version }}}

@@ -1,6 +1,6 @@
 
 
-- hosts: kube-master[0]
+- hosts: kube_control_plane[0]
   tags: [ "helm" ]
 {%% if m.data.httpProxies is defined and m.data.httpProxies.helm is defined %%}
   vars:

@@ -1,6 +1,6 @@
 
 
-- hosts: kube-master
+- hosts: kube_control_plane
   tags: [ "topolvm", "topolvm_master" ]
   vars:
     topolvm_state: absent  
