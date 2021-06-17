@@ -36,6 +36,7 @@ METRICS_SERVER="metrics_server"
 AUDIT="audit"
 POD_SECURITY_POLICIES="pod_security_policies"
 
+
 def groom(_plugin, model):
     setDefaultInMap(model[CLUSTER], K8S, {})
     setDefaultInMap(model[CLUSTER][K8S], KUBESPRAY, {})

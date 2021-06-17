@@ -78,7 +78,11 @@
     ansible.builtin.replace:
       path: /root/.kube/config
       regexp: 'https://127.0.0.1:'
+{%% if m.cluster.vagrant is defined %%}
       replace: 'https://{{ ansible_host }}:'
+{%% else %%}      
+      replace: 'https://{{ ansible_default_ipv4.address }}:'
+{%% endif %%}
     tags: [ "client" ]      
   - name: "Copy config file locally"
     fetch:
