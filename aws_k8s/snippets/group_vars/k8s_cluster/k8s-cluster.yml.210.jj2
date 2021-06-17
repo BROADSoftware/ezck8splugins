@@ -1,0 +1,9 @@
+
+## Add Persistent Volumes Storage Class for corresponding cloud provider (supported: in-tree OpenStack, Cinder CSI,
+## AWS EBS CSI, Azure Disk CSI, GCP Persistent Disk CSI)
+{%% if m.cluster.aws_k8s.ebs_csi is defined %%}
+persistent_volumes_enabled: true 
+{%% else %%}
+persistent_volumes_enabled: false
+{%% endif %%}
+
