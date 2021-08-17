@@ -31,7 +31,8 @@ DISABLED="disabled"
 DATA="data"
 ROLE_BY_NAME="roleByName"
 INSTANCE_ROLE_NAME="instance_role_name"
-
+EBS_CSI_ENABLED="ebs_csi_enabled"
+PERSISTENT_VOLUMES_ENABLED="persistentVolumesEnabled"
 
 def groom(_plugin, model):
     if K8S not in model[CLUSTER]:
@@ -47,10 +48,17 @@ def groom(_plugin, model):
         setDefaultInMap(model[CLUSTER][AWS_K8S][EBS_CSI], EBS_CONTROLER_REPLICAS, 1)
         setDefaultInMap(model[CLUSTER][AWS_K8S][EBS_CSI], EBS_PLUGIN_IMAGE_TAG, "latest")
         if model[CLUSTER][AWS_K8S][EBS_CSI][DISABLED]:
-            delete(model[CLUSTER][AWS_K8S][AWS_EBS_CSI])
-        # As we must apply a policy to all nodes, ensure all nodes got an instance role
-        for roleName, role in model[DATA][ROLE_BY_NAME].iteritems():
-            if not INSTANCE_ROLE_NAME in role[AWS]:
-                ERROR("AWS instance role was not enabled for Role '{}'! (Set 'aws.create_instance_role' switch)".format(roleName))
-    
+            delete(model[CLUSTER][AWS_K8S][AWS_K8S])
+        else:
+            model[DATA][K8S][PERSISTENT_VOLUMES_ENABLED] = True
+            # Ensure we will have an instance role for all node allowed to use EBS CSI driver
+            for roleName, role in model[DATA][ROLE_BY_NAME].iteritems():
+                setDefaultInMap(role[AWS], EBS_CSI_ENABLED, False)
+                if role[AWS][EBS_CSI_ENABLED]:
+                    if not INSTANCE_ROLE_NAME in role[AWS]:
+                        ERROR("AWS instance role was not enabled for Role '{}' while 'ebs_csi_enabled' is set ! (Set also 'create_instance_role' switch)".format(roleName))
     return True
+
+
+
+

@@ -258,7 +258,11 @@ podsecuritypolicy_enabled: {{{ m.cluster.k8s.kubespray.pod_security_policies }}}
 volume_cross_zone_attachment: false
 ## Add Persistent Volumes Storage Class for corresponding cloud provider (supported: in-tree OpenStack, Cinder CSI,
 ## AWS EBS CSI, Azure Disk CSI, GCP Persistent Disk CSI)
+{%% if m.data.k8s.persistentVolumesEnabled is defined and  m.data.k8s.persistentVolumesEnabled %%}
+persistent_volumes_enabled: true
+{%% else %%}
 persistent_volumes_enabled: false
+{%% endif %%}
 
 ## Container Engine Acceleration
 ## Enable container acceleration feature, for example use gpu acceleration in containers

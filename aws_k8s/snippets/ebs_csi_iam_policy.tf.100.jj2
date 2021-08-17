@@ -136,12 +136,12 @@ resource "aws_iam_policy" "{{{ m.cluster.id }}}_ebs_csi_policy" {
 EOF
 }
 
-// Attach this policy to all instance roles
+// Attach this policy to relevant instance roles
 
 
 {%% for name, role in m.data.roleByName.iteritems() %%}
 
-{%% if role.aws.instance_role_name is defined %%}
+{%% if role.aws.ebs_csi_enabled %%}
 
 resource "aws_iam_role_policy_attachment" "test-attach" {
   role       = aws_iam_role.{{{ role.aws.instance_role_name }}}.name

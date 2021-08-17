@@ -38,6 +38,7 @@ POD_SECURITY_POLICIES="pod_security_policies"
 
 
 def groom(_plugin, model):
+    setDefaultInMap(model[DATA], K8S, {})
     setDefaultInMap(model[CLUSTER], K8S, {})
     setDefaultInMap(model[CLUSTER][K8S], KUBESPRAY, {})
     setDefaultInMap(model[CLUSTER][K8S][KUBESPRAY], DISABLED, False)

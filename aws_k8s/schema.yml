@@ -32,5 +32,15 @@ mapping:
           volume_resizing: { type: bool, required: false }    # Default to false
           controller_replicas: { type: int, required: false }    # Default to 1
           plugin_image_tag: { type: str, required: false }    # Default to "latest"
-
-          
+        
+  "roles": 
+    type: seq
+    required: true
+    sequence:
+    - type: map
+      mapping:
+        "aws":
+          type: map
+          required: true
+          mapping:
+            "ebs_csi_enabled": { type: bool, required: false }  # Default to false          
